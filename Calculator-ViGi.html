@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Creative Asset Pack Pricing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500&family=Bricolage+Grotesque:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #172D36;
+            --bleu: #6C95A7;
+            --sand: #F1F0EA;
+            --snow: #FFFFFF;
+            --black: #0B0B0B;
+            --growth: #31BA93;
+        }
+        body {
+            font-family: 'Archivo', sans-serif;
+            background-color: var(--sand);
+            color: var(--black);
+            margin: 0;
+            padding: 60px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container { width: 100%; max-width: 1100px; }
+        .header { text-align: center; margin-bottom: 50px; }
+        h1 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 2.5rem; color: var(--navy); margin: 0; }
+        .header p { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; color: var(--bleu); text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; }
+        
+        .calculator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .card {
+            background: var(--snow);
+            padding: 40px;
+            border-radius: 12px;
+            border: 2px solid var(--black);
+            box-shadow: 8px 8px 0px var(--navy);
+        }
+        h2 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; color: var(--navy); text-transform: uppercase; font-size: 1.3rem; margin-top: 0; border-bottom: 2px solid var(--sand); padding-bottom: 15px; margin-bottom: 25px; }
+        
+        .input-group { margin-bottom: 25px; }
+        label { display: block; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 10px; color: var(--navy); }
+        input, select { width: 100%; padding: 14px; border: 2px solid var(--sand); border-radius: 6px; font-size: 1rem; font-family: 'Archivo', sans-serif; }
+        input:focus { border-color: var(--bleu); outline: none; }
+
+        .result-box { background-color: var(--sand); padding: 25px; border-radius: 8px; margin-top: 30px; }
+        .total-row { display: flex; justify-content: space-between; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.4rem; border-top: 2px solid var(--bleu); padding-top: 20px; margin-top: 5px; }
+        .val { color: var(--growth); }
+        
+        .guidance { font-size: 0.9rem; color: var(--navy); margin-top: 25px; line-height: 1.5; border-left: 3px solid var(--bleu); padding-left: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>AI Creative Asset Pack Pricing</h1>
+        <p>Voyageur Group Internal Proposal Tool</p>
+    </div>
+
+    <div class="calculator-grid">
+        <div class="card">
+            <h2>Project Based</h2>
+            <div class="input-group">
+                <label>Parent ASINs ($500 ea)</label>
+                <input type="number" id="proj-parents" value="12" oninput="update()">
+            </div>
+            <div class="input-group">
+                <label>Child Variant Swaps ($25 ea)</label>
+                <input type="number" id="proj-children" value="60" oninput="update()">
+            </div>
+            <div class="result-box">
+                <div class="total-row">
+                    <span>Total Project Fee:</span>
+                    <span id="p-total" class="val">$0</span>
+                </div>
+            </div>
+            <p class="guidance">Ideal for new clients, small to mid-sized catalogs, or single launches.</p>
+        </div>
+
+        <div class="card">
+            <h2>Retainer Based</h2>
+            <div class="input-group">
+                <label>Select Monthly Tier</label>
+                <select id="ret-tier" onchange="update()">
+                    <option value="1350">Starter (3 Parents) / $1,350</option>
+                    <option value="2550">Growth (6 Parents) / $2,550</option>
+                    <option value="4500" selected>Catalog (12 Parents) / $4,500</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Child Variant Swaps ($20 ea)</label>
+                <input type="number" id="ret-children" value="0" oninput="update()">
+            </div>
+            <div class="result-box">
+                <div class="total-row" style="font-size: 1.2rem; border-bottom: 2px solid var(--bleu); padding-bottom: 10px; margin-bottom: 10px; border-top: none;">
+                    <span>Monthly Total:</span>
+                    <span id="r-monthly">$0</span>
+                </div>
+                <div class="total-row" style="border-top: none; padding-top: 0;">
+                    <span>3-Month Minimum:</span>
+                    <span id="r-total" class="val">$0</span>
+                </div>
+            </div>
+            <p class="guidance">Three month minimum commitment. Credits do not roll over. Ideal for regular launch cycles.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function update() {
+        // Project
+        const pp = document.getElementById('proj-parents').value || 0;
+        const pc = document.getElementById('proj-children').value || 0;
+        document.getElementById('p-total').innerText = '$' + ((pp * 500) + (pc * 25)).toLocaleString();
+
+        // Retainer
+        const rt = parseInt(document.getElementById('ret-tier').value);
+        const rc = document.getElementById('ret-children').value || 0;
+        const monthly = rt + (rc * 20);
+        document.getElementById('r-monthly').innerText = '$' + monthly.toLocaleString();
+        document.getElementById('r-total').innerText = '$' + (monthly * 3).toLocaleString();
+    }
+    update();
+</script>
+
+</body>
+</html>
